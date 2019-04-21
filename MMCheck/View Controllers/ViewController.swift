@@ -18,6 +18,8 @@ import AVFoundation
  5. We need to make sure we're using class_weights correctly
  6. The validation data is concerning because we should just sample from all the data sets for 50 % gesture and 50% non
  TLDR: MORE POINTING DATA! BETTER SCALING! MORE EVEN VALIDATION SET!
+ 
+ Record some soft (less grippy) points.
  */
 
 class ViewController: UIViewController {
@@ -29,7 +31,7 @@ class ViewController: UIViewController {
   
   var lastRecognition = Date()
   var recognitionDebounceInterval = 1.0
-  var recognitionThreshold = 0.5
+  var recognitionThreshold = 0.95
   var recognitionPredictionAverageCount = 5
   
   @IBOutlet weak var gestureProbabilityLabel: UILabel!
@@ -37,7 +39,7 @@ class ViewController: UIViewController {
   
   /// Same datum is kept until 'ready' then it is printed and reset
   var datum = Datum()
-  var printCSV: Bool = true
+  var printCSV: Bool = false
   var printClassification: Bool = false
   var classify = true
   
@@ -144,6 +146,7 @@ extension ViewController {
   func debounceRecognition() {
     guard Date().timeIntervalSince(lastRecognition) > recognitionDebounceInterval else { return }
     guard modeler.averageOfLast(pointCount: recognitionPredictionAverageCount)?.gesture ?? 0 > recognitionThreshold else { return }
+    print(modeler.averageOfLast(pointCount: recognitionPredictionAverageCount)!.gesture)
     audioPlayer.play()
     lastRecognition = Date()
   }

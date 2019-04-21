@@ -8,8 +8,8 @@
 
 import Foundation
 
-fileprivate let aScale = (min: -3.364746, max: 5.992187)
-fileprivate let qScale = (min: -2.579102, max: 5.206543)
+fileprivate let aScale = (min: -10.0, max: -10.0)
+fileprivate let qScale = (min: -3.141593, max: 9.424778)
 fileprivate let eScale = (min: -128.0, max: 255.0)
 
 struct Datum: CustomDebugStringConvertible {

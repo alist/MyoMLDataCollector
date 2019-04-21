@@ -38,7 +38,7 @@ class MyoModelRunner {
   let keepLastPredictionCount = 20
   private var dataPoints = [Datum]()
   private var lastPredictions = [Prediction]()
-  private var model = IMyoPointingModel()
+  private var model = LMyoPointingModel()
   private var currentlyPredicting = false
   var isPredicting: Bool { return currentlyPredicting }
   
