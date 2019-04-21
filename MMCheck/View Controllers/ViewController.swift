@@ -9,6 +9,17 @@
 import UIKit
 import AVFoundation
 
+/**
+ NOTES: J AND K models don't really work. I works pretty well when you have myo on correctly and you clentch-point!
+ 1. I think there's too much non-gesture data over gesture data-->
+ 2.     There's not enough gesture data in the port-down configuration
+ 3.     There's not a lot of data in different rotations around wrist
+ 4. The framed data should be uniformly scaled at this point because the differences are too subtle. Accel ±10 g and quat by Pi, EMG ±255
+ 5. We need to make sure we're using class_weights correctly
+ 6. The validation data is concerning because we should just sample from all the data sets for 50 % gesture and 50% non
+ TLDR: MORE POINTING DATA! BETTER SCALING! MORE EVEN VALIDATION SET!
+ */
+
 class ViewController: UIViewController {
   var myo: TLMMyo!
   let modeler = MyoModelRunner()

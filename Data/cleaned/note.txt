@@ -1,1 +1,1 @@
-usb-up arm; gesture begins finger up till just after points out 
+usb-up arm (away from hand); gesture begins finger up till just after points out 

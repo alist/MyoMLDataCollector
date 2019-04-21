@@ -13,6 +13,8 @@
 		7938E67F226CD9F20026E091 /* GMyoPointingModel.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 7938E67E226CD9F20026E091 /* GMyoPointingModel.mlmodel */; };
 		7938E681226D012A0026E091 /* IMyoPointingModel.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 7938E680226D012A0026E091 /* IMyoPointingModel.mlmodel */; };
 		7938E689226D0CC90026E091 /* HTDripSound.wav in Resources */ = {isa = PBXBuildFile; fileRef = 7938E688226D0CC90026E091 /* HTDripSound.wav */; };
+		7938E68C226D19B40026E091 /* KMyoPointingModel.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 7938E68A226D19B30026E091 /* KMyoPointingModel.mlmodel */; };
+		7938E68D226D19B40026E091 /* JMyoPointingModel.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 7938E68B226D19B40026E091 /* JMyoPointingModel.mlmodel */; };
 		799F1766225B8DFC0022FC96 /* MMCheckTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 799F1765225B8DFC0022FC96 /* MMCheckTests.swift */; };
 		799F177C225B8E450022FC96 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 799F1771225B8E450022FC96 /* ViewController.swift */; };
 		799F177D225B8E450022FC96 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 799F1773225B8E450022FC96 /* Assets.xcassets */; };
@@ -41,6 +43,8 @@
 		7938E67E226CD9F20026E091 /* GMyoPointingModel.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = GMyoPointingModel.mlmodel; sourceTree = "<group>"; };
 		7938E680226D012A0026E091 /* IMyoPointingModel.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = IMyoPointingModel.mlmodel; sourceTree = "<group>"; };
 		7938E688226D0CC90026E091 /* HTDripSound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = HTDripSound.wav; sourceTree = "<group>"; };
+		7938E68A226D19B30026E091 /* KMyoPointingModel.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = KMyoPointingModel.mlmodel; sourceTree = "<group>"; };
+		7938E68B226D19B40026E091 /* JMyoPointingModel.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = JMyoPointingModel.mlmodel; sourceTree = "<group>"; };
 		799F174A225B8DFA0022FC96 /* MMCheck.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MMCheck.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		799F1761225B8DFC0022FC96 /* MMCheckTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MMCheckTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		799F1765225B8DFC0022FC96 /* MMCheckTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MMCheckTests.swift; sourceTree = "<group>"; };
@@ -149,6 +153,8 @@
 		799F1786225B8EA00022FC96 /* Model and Logic */ = {
 			isa = PBXGroup;
 			children = (
+				7938E68B226D19B40026E091 /* JMyoPointingModel.mlmodel */,
+				7938E68A226D19B30026E091 /* KMyoPointingModel.mlmodel */,
 				7938E680226D012A0026E091 /* IMyoPointingModel.mlmodel */,
 				7938E67E226CD9F20026E091 /* GMyoPointingModel.mlmodel */,
 				799F1788225B8EB70022FC96 /* MMCheck-Bridging-Header.h */,
@@ -269,10 +275,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7938E68C226D19B40026E091 /* KMyoPointingModel.mlmodel in Sources */,
 				7938E681226D012A0026E091 /* IMyoPointingModel.mlmodel in Sources */,
 				7938E67D226CB9350026E091 /* StringExtensions.swift in Sources */,
 				799F1781225B8E450022FC96 /* AppDelegate.swift in Sources */,
 				7938E679226CB8E00026E091 /* MyoModelRunner.swift in Sources */,
+				7938E68D226D19B40026E091 /* JMyoPointingModel.mlmodel in Sources */,
 				7938E67B226CB90F0026E091 /* MyoDatum.swift in Sources */,
 				7938E67F226CD9F20026E091 /* GMyoPointingModel.mlmodel in Sources */,
 				799F1780225B8E450022FC96 /* MMCheck.xcdatamodeld in Sources */,
