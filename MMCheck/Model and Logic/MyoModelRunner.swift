@@ -30,10 +30,14 @@ fileprivate enum ChannelIdx: NSNumber {
   case e7
 }
 
+typealias Prediction = (idle: Double, gesture: Double)
+
 fileprivate let aChannelIdx = (x: 0, y: 1, z: 2)
 
 class MyoModelRunner {
+  let keepLastPredictionCount = 20
   private var dataPoints = [Datum]()
+  private var lastPredictions = [Prediction]()
   private var model = IMyoPointingModel()
   private var currentlyPredicting = false
   var isPredicting: Bool { return currentlyPredicting }
@@ -46,7 +50,21 @@ class MyoModelRunner {
     }
   }
   
-  func makePrediction() -> (idle: Double, gesture: Double)? {
+  func averageOfLast(pointCount count: Int = 5) -> Prediction? {
+    guard lastPredictions.count > count else { return nil }
+    let toAverage = Array(lastPredictions[lastPredictions.endIndex.advanced(by: -1 * count)...])
+    var idleSum: Double = 0.0
+    var gestureSum: Double = 0.0
+    for pred in toAverage {
+      idleSum += pred.idle
+      gestureSum += pred.gesture
+    }
+    idleSum /= Double(count)
+    gestureSum /= Double(count)
+    return (idle: idleSum, gesture: gestureSum)
+  }
+  
+  func makePrediction() -> Prediction? {
     currentlyPredicting = true
     defer {
       currentlyPredicting = false
@@ -57,7 +75,13 @@ class MyoModelRunner {
     }
     let output = result.output1
     guard !output[0].doubleValue.isNaN && !output[1].doubleValue.isNaN else {return nil}
-    return (output[0].doubleValue, output[1].doubleValue)
+    
+    let prediction = (output[0].doubleValue, output[1].doubleValue)
+    lastPredictions.append(prediction)
+    if lastPredictions.count > keepLastPredictionCount {
+      lastPredictions = Array(lastPredictions[lastPredictions.endIndex.advanced(by: -keepLastPredictionCount)...])
+    }
+    return prediction
   }
 }
 

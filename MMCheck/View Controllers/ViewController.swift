@@ -7,12 +7,19 @@
 //
 
 import UIKit
+import AVFoundation
 
 class ViewController: UIViewController {
   var myo: TLMMyo!
   let modeler = MyoModelRunner()
+  let audioPlayer = try! AVAudioPlayer(contentsOf: Bundle.main.url(forResource: "HTDripSound", withExtension: "wav")!)
   var startTime = Date()
   var isGesture: Bool = false
+  
+  var lastRecognition = Date()
+  var recognitionDebounceInterval = 1.0
+  var recognitionThreshold = 0.5
+  var recognitionPredictionAverageCount = 5
   
   @IBOutlet weak var gestureProbabilityLabel: UILabel!
   @IBOutlet weak var idleProbabilityLabel: UILabel!
@@ -115,9 +122,18 @@ extension ViewController {
         DispatchQueue.main.async {
           this.gestureProbabilityLabel.text = String(format: "%1.3f", arguments: [prediction.gesture])
           this.idleProbabilityLabel.text = String(format: "%1.3f", arguments: [prediction.idle])
+          this.debounceRecognition()
         }
       }
     }
     datum = Datum()
+  }
+  
+  /// Handles recognition and it's debouncing
+  func debounceRecognition() {
+    guard Date().timeIntervalSince(lastRecognition) > recognitionDebounceInterval else { return }
+    guard modeler.averageOfLast(pointCount: recognitionPredictionAverageCount)?.gesture ?? 0 > recognitionThreshold else { return }
+    audioPlayer.play()
+    lastRecognition = Date()
   }
 }
