@@ -8,7 +8,12 @@
 
 import UIKit
 
+extension String {
+  static let empty = ""
+}
+
 struct Datum: CustomDebugStringConvertible {
+  static let csvHeader = "time,gesture,ax,ay,az,qw,qx,qy,qz,e0,e1,e2,e3,e4,e5,e6,e7"
   /// Last data was set this time interval since run began
   var date: TimeInterval?
   /// Accelerations
@@ -24,10 +29,18 @@ struct Datum: CustomDebugStringConvertible {
     return date != nil && quaternion != nil && acceleration != nil && emg != nil
   }
   
+  var verbose = false
   var debugDescription: String {
     guard ready else { return "not ready" }
     let emgString = emg!.map{ $0.stringValue }.joined(separator: ", e ")
-    return "\(date!), \(isGesture), a \(acceleration!.x), a \(acceleration!.y), a \(acceleration!.z), q \(quaternion!.w), q \(quaternion!.x), q \(acceleration!.y), q \(acceleration!.z), e \(emgString)"
+    var outString = "\(date!), \(isGesture), a \(acceleration!.x), a \(acceleration!.y), a \(acceleration!.z), q \(quaternion!.w), q \(quaternion!.x), q \(acceleration!.y), q \(acceleration!.z), e \(emgString)"
+    if !verbose {
+      outString = outString.replacingOccurrences(of: "a", with: String.empty)
+      outString = outString.replacingOccurrences(of: "e", with: String.empty)
+      outString = outString.replacingOccurrences(of: "q", with: String.empty)
+      outString = outString.split(separator: " ").joined() //deletes spaces after adding them lol
+    }
+    return outString
   }
 }
 
@@ -68,6 +81,8 @@ class ViewController: UIViewController {
     NotificationCenter.default.addObserver(self, selector: #selector(self.onAccelerometerData(notification:)), name: NSNotification.Name.TLMMyoDidReceiveAccelerometerEvent, object: nil)
     
     NotificationCenter.default.addObserver(self, selector: #selector(self.onRotationData(notification:)), name: NSNotification.Name.TLMMyoDidReceiveOrientationEvent, object: nil)
+    
+    print(Datum.csvHeader)
     
     OperationQueue.main.addOperation { [weak self] in
       self?.openSettings()
