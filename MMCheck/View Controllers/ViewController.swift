@@ -8,49 +8,20 @@
 
 import UIKit
 
-extension String {
-  static let empty = ""
-}
-
-struct Datum: CustomDebugStringConvertible {
-  static let csvHeader = "time,gesture,ax,ay,az,qw,qx,qy,qz,e0,e1,e2,e3,e4,e5,e6,e7"
-  /// Last data was set this time interval since run began
-  var date: TimeInterval?
-  /// Accelerations
-  var acceleration: TLMVector3?
-  /// EMG values
-  var emg: [NSNumber]?
-  /// Quat
-  var quaternion: TLMQuaternion?
-  /// whether it should be classified as part of a gesture or not
-  var isGesture: Bool = false
-  
-  var ready: Bool {
-    return date != nil && quaternion != nil && acceleration != nil && emg != nil
-  }
-  
-  var verbose = false
-  var debugDescription: String {
-    guard ready else { return "not ready" }
-    let emgString = emg!.map{ $0.stringValue }.joined(separator: ", e ")
-    var outString = "\(date!), \(isGesture), a \(acceleration!.x), a \(acceleration!.y), a \(acceleration!.z), q \(quaternion!.w), q \(quaternion!.x), q \(acceleration!.y), q \(acceleration!.z), e \(emgString)"
-    if !verbose {
-      outString = outString.replacingOccurrences(of: "a", with: String.empty)
-      outString = outString.replacingOccurrences(of: "e", with: String.empty)
-      outString = outString.replacingOccurrences(of: "q", with: String.empty)
-      outString = outString.split(separator: " ").joined() //deletes spaces after adding them lol
-    }
-    return outString
-  }
-}
-
 class ViewController: UIViewController {
   var myo: TLMMyo!
+  let modeler = MyoModelRunner()
   var startTime = Date()
   var isGesture: Bool = false
   
+  @IBOutlet weak var gestureProbabilityLabel: UILabel!
+  @IBOutlet weak var idleProbabilityLabel: UILabel!
+  
   /// Same datum is kept until 'ready' then it is printed and reset
   var datum = Datum()
+  var printCSV: Bool = true
+  var printClassification: Bool = false
+  var classify = true
   
   @IBOutlet weak var statusLabel: UILabel!
   
@@ -109,7 +80,6 @@ extension ViewController {
     datum.date = emg.timestamp.timeIntervalSince(startTime)
     datum.emg = data
     processData()
-//    print("💪🏼 EMG: \(emg.timestamp.timeIntervalSince(startTime)) - \(data)" )
   }
   
   @objc func onAccelerometerData(notification: Notification!) {
@@ -118,7 +88,6 @@ extension ViewController {
     datum.date = accel.timestamp.timeIntervalSince(startTime)
     datum.acceleration = data
     processData()
-//    print("🏎 ACC: \(accel.timestamp.timeIntervalSince(startTime)) - \(data.x), \(data.y), \(data.z)" )
   }
   
   @objc func onRotationData(notification: Notification!) {
@@ -127,13 +96,28 @@ extension ViewController {
     datum.date = rot.timestamp.timeIntervalSince(startTime)
     datum.quaternion = data
     processData()
-//    print("➰ ROT: \(rot.timestamp.timeIntervalSince(startTime)) - \(data.x), \(data.y), \(data.z), w: \(data.w)")
   }
   
   func processData() {
     guard datum.ready else { return }
     datum.isGesture = isGesture
-    print(datum)
+    if printCSV {
+      print(datum)
+    }
+    modeler.addDataPoint(point: datum)
+    if !modeler.isPredicting && classify {
+      OperationQueue.main.addOperation { [weak self] in
+        guard let this = self else { return }
+        guard let prediction = this.modeler.makePrediction() else { return }
+        if this.printClassification {
+          print(prediction)
+        }
+        DispatchQueue.main.async {
+          this.gestureProbabilityLabel.text = String(format: "%1.3f", arguments: [prediction.gesture])
+          this.idleProbabilityLabel.text = String(format: "%1.3f", arguments: [prediction.idle])
+        }
+      }
+    }
     datum = Datum()
   }
 }
