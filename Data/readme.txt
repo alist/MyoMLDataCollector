@@ -1,0 +1,1 @@
+We moved this data to MMCheckComp python's folder
